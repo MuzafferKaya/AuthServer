@@ -1,4 +1,7 @@
-﻿using Dto.Request.Customer;
+﻿using Dto.Request.Authentication;
+using Dto.Request.Customer;
+using Dto.Request.Role;
+using Dto.Request.User;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,7 +18,14 @@ namespace Dto.Extensions
 
             services.AddFluentValidationAutoValidation();
             services.AddValidatorsFromAssemblyContaining<CustomerAddRequestValidator>();
-            services.AddValidatorsFromAssemblyContaining<CustomerUpdateRequest>();
+            services.AddValidatorsFromAssemblyContaining<CustomerUpdateRequestValidator>();
+
+            services.AddValidatorsFromAssemblyContaining<UserAddRequestValidator>();
+            services.AddValidatorsFromAssemblyContaining<UserUpdateRequestValidator>();
+
+            services.AddValidatorsFromAssemblyContaining<AuthenticationLoginRequestValidator>();
+            services.AddValidatorsFromAssemblyContaining<RoleAddRequestValidator>();            
+
             return services;
         }
     }

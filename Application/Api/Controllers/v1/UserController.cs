@@ -3,14 +3,13 @@ using DomainModel.Entities;
 using DomainModel.UnitOfWork;
 using DomainService.Abstrack;
 using Dto.Request.User;
-using Microsoft.AspNetCore.Authorization;
+using Dto.Response.User;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers.v1
 {
     [Route("api/v1/[controller]s")]
     [ApiController]
-    [Authorize]
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
@@ -32,7 +31,31 @@ namespace Api.Controllers.v1
                 var user = _mapper.Map<User>(request);
                 var newUser = await _userService.AddAsync(user);
                 await _unitOfWork.CommitTransactionAsync();
-                return Ok(new { id = newUser });
+                return Created(string.Empty, newUser);
+            }
+            catch (Exception ex)
+            {
+                await _unitOfWork.RollbackTransactionAsync();
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllAsync()
+        {
+            var users = await _userService.GetAllAsync();
+            return Ok(_mapper.Map<IList<UserGetAllResponse>>(users));
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateAsync([FromBody] UserUpdateRequest request)
+        {
+            try
+            {
+                var user = _mapper.Map<User>(request);
+                var updatedUser = await _userService.UpdateAsync(user);
+                await _unitOfWork.CommitTransactionAsync();
+                return NoContent();
             }
             catch (Exception ex)
             {

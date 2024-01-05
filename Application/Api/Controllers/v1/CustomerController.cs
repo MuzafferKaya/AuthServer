@@ -11,7 +11,7 @@ namespace Api.Controllers.v1
 {
     [Route("api/v1/[controller]s")]
     [ApiController]
-    [Authorize]
+    [Authorize(Roles = "admin")]
     public class CustomerController : ControllerBase
     {
         private readonly ICustomerService _customerService;
@@ -33,7 +33,7 @@ namespace Api.Controllers.v1
                 var customer = _mapper.Map<Customer>(request);
                 var newCustomer = await _customerService.AddAsync(customer);
                 await _unitOfWork.CommitTransactionAsync();
-                return Ok(new { id = newCustomer });
+                return Created(string.Empty, newCustomer);                
             }
             catch (Exception ex)
             {
@@ -64,7 +64,7 @@ namespace Api.Controllers.v1
                 var customer = _mapper.Map<Customer>(request);
                 var updatedCustomer = await _customerService.UpdateAsync(customer);
                 await _unitOfWork.CommitTransactionAsync();
-                return Ok(new { id = updatedCustomer });
+                return NoContent();
             }
             catch (Exception ex)
             {
@@ -81,7 +81,7 @@ namespace Api.Controllers.v1
                 var customer = await _customerService.GetByIdAsync(id);
                 await _customerService.RemoveAsync(customer);
                 await _unitOfWork.CommitTransactionAsync();
-                return Ok();
+                return NoContent();
             }
             catch (Exception ex)
             {

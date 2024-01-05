@@ -16,10 +16,10 @@ namespace Api.Controllers.v1
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateToken([FromBody] AuthenticationLoginRequest request)
+        public async Task<IActionResult> CreateToken([FromBody] AuthenticationRequest request)
         {
             var response = await _authenticationService.CreateTokenAsync(request);
-            return Ok(response);
+            return Created(string.Empty, response);
         }
     }
 }

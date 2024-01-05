@@ -19,13 +19,13 @@ namespace DomainService.Services
             _jwtSettings = options.Value;
         }
 
-        public IList<Claim> GetClaims(User entity)
+        public static IList<Claim> GetClaims(User entity)
         {
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, entity.Id.ToString()),
-                new Claim(JwtRegisteredClaimNames.Email, entity.Email!),
                 new Claim(ClaimTypes.Name, entity.UserName!),
+                new Claim(ClaimTypes.Role, entity.Role.RoleName),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             };
 
@@ -34,24 +34,18 @@ namespace DomainService.Services
 
         public AuthenticationTokenResponse CreateToken(User entity)
         {
-            var expiration = DateTime.UtcNow.AddHours(_jwtSettings.Expiration);
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Key!));
-            SigningCredentials signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256Signature);
-            JwtSecurityToken jwtSecurityToken = new JwtSecurityToken(
-                issuer: _jwtSettings.Issuer,
-                audience: _jwtSettings.Audience,
-                claims: GetClaims(entity),
-                expires: expiration,
-                signingCredentials: signingCredentials
-                );
-
-            AuthenticationTokenResponse tokenResponse = new AuthenticationTokenResponse()
+            return new AuthenticationTokenResponse()
             {
-                accesToken = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken),
-                accesTokenExpiration = expiration
+                accesToken = new JwtSecurityTokenHandler().WriteToken(
+                    new JwtSecurityToken(
+                        issuer: _jwtSettings.Issuer,
+                        audience: _jwtSettings.Audience,
+                        claims: GetClaims(entity),
+                        expires: DateTime.UtcNow.AddHours(_jwtSettings.Expiration),
+                        signingCredentials: new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Key!)), SecurityAlgorithms.HmacSha256Signature)
+                        )),
+                refreshToken = null
             };
-
-            return tokenResponse;
         }
     }
 }

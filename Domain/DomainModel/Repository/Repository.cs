@@ -28,6 +28,20 @@ namespace DomainModel.Repository
             return await _appDbContext.Set<T>().AsNoTracking().ToListAsync();
         }
 
+        public async Task<IList<T>> WhereAsync(Expression<Func<T, bool>> predicate)
+        {
+            return await _appDbContext.Set<T>().Where(predicate).ToListAsync();
+        }
+
+        public async Task<IList<T>> Include(params string[] properties)
+        {
+            IQueryable<T> query = _appDbContext.Set<T>().AsNoTracking();
+            for (int i = 0; i < properties.Length; i++)
+                query = query.Include(properties[i]);
+
+            return await query.ToListAsync();
+        }
+
         public async Task<T> GetByIdAsync(long id)
         {
             return await _appDbContext.Set<T>().FindAsync(id);
@@ -38,13 +52,6 @@ namespace DomainModel.Repository
             return await _appDbContext.Set<T>().SingleOrDefaultAsync(predicate);
         }
 
-        public async Task RemoveAsync(T entity)
-        {
-            await _unitOfWork.BeginTransactionAsync();
-            _appDbContext.Set<T>().Remove(entity);
-            await _appDbContext.SaveChangesAsync();
-        }
-
         public async Task UpdateAsync(T entity)
         {
             await _unitOfWork.BeginTransactionAsync();
@@ -52,9 +59,11 @@ namespace DomainModel.Repository
             await _appDbContext.SaveChangesAsync();
         }
 
-        public async Task<IList<T>> WhereAsync(Expression<Func<T, bool>> predicate)
+        public async Task RemoveAsync(T entity)
         {
-            return await _appDbContext.Set<T>().Where(predicate).ToListAsync();
+            await _unitOfWork.BeginTransactionAsync();
+            _appDbContext.Set<T>().Remove(entity);
+            await _appDbContext.SaveChangesAsync();
         }
     }
 }

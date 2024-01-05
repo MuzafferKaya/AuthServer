@@ -36,9 +36,11 @@ namespace DomainService.Extensions
 
             services.AddScoped<ICustomerService, CustomerService>();
             services.AddScoped<IUserService, UserService>();
-            services.AddScoped<IPasswordHasherService, PasswordHasherService>();
+            services.AddScoped<IRoleService, RoleService>();
+            services.AddScoped<IPasswordService, PasswordService>();
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
+
             return services;
         }
     }

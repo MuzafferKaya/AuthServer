@@ -7,6 +7,7 @@ namespace DomainModel.Repository
         Task AddAsync(T entity);
         Task<IList<T>> GetAllAsync();
         Task<IList<T>> WhereAsync(Expression<Func<T, bool>> predicate);
+        Task<IList<T>> Include(params string[] properties);
         Task<T> GetByIdAsync(long id);
         Task<T> SingleOrDefaultAsync(Expression<Func<T, bool>> predicate);
         Task UpdateAsync(T entity);

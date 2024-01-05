@@ -2,7 +2,7 @@
 {
     public class AuthenticationTokenResponse
     {
-        public string accesToken { get; set; }
-        public DateTime accesTokenExpiration { get; set; }
+        public string? accesToken { get; set; }
+        public string? refreshToken { get; set; }
     }
 }

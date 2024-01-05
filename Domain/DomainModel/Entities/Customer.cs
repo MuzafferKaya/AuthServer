@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DomainModel.Entities
 {
-    [Table("customers")]
+    [Table("Customers")]
     public class Customer : EntityBase
     {
         [Required(ErrorMessage = "Ad gereklidir.")]

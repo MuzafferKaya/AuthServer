@@ -3,7 +3,7 @@ using System.Security.Cryptography;
 
 namespace DomainService.Services
 {
-    public class PasswordHasherService : IPasswordHasherService
+    public class PasswordService : IPasswordService
     {
         private const int SaltSize = 128 / 8;
         private const int KeySize = 256 / 8;
@@ -24,8 +24,8 @@ namespace DomainService.Services
             var elements = hashedPassword.Split(Delimiter);
             var salt = Convert.FromBase64String(elements[0]);
             var hash = Convert.FromBase64String(elements[1]);
-
             var password = Rfc2898DeriveBytes.Pbkdf2(providedPassword, salt, Iterations, _hashAlgorithmName, KeySize);
+
             return CryptographicOperations.FixedTimeEquals(hash, password);
         }
     }

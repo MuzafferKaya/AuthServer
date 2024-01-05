@@ -7,24 +7,28 @@ namespace DomainService.Services
     public class AuthenticationService : IAuthenticationService
     {
         private readonly IUserService _userService;
-        private readonly IPasswordHasherService _passwordHasherService;
+        private readonly IRoleService _roleService;
+        private readonly IPasswordService _passwordService;
         private readonly ITokenService _tokenService;
 
-        public AuthenticationService(IUserService userService, IPasswordHasherService passwordHasherService, ITokenService tokenService)
+        public AuthenticationService(IUserService userService, IRoleService roleService, IPasswordService passwordService, ITokenService tokenService)
         {
             _userService = userService;
-            _passwordHasherService = passwordHasherService;
+            _roleService = roleService;
+            _passwordService = passwordService;
             _tokenService = tokenService;
         }
 
-        public async Task<AuthenticationTokenResponse> CreateTokenAsync(AuthenticationLoginRequest entity)
+        public async Task<AuthenticationTokenResponse> CreateTokenAsync(AuthenticationRequest entity)
         {
             var user = await _userService.GetByEmailAsync(entity.email!);
-            if (user == null || !_passwordHasherService.VerifyHashedPassword(user.PasswordHash!, entity.password!))
-                return null;
+            if (user == null || !_passwordService.VerifyHashedPassword(user.PasswordHash!, entity.password!))
+                throw new Exception("Incorrect email or password");
 
-            var token = _tokenService.CreateToken(user);
-            return token;
+            var role = await _roleService.GetByIdAsync(user.RoleId);
+            user.Role.RoleName = role.RoleName;
+
+            return _tokenService.CreateToken(user);
         }
     }
 }

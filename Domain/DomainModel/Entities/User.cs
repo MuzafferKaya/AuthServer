@@ -2,14 +2,16 @@
 
 namespace DomainModel.Entities
 {
-    [Table("users")]
+    [Table("Users")]
     public class User : EntityBase
     {
-        public string? UserName { get; set; }
-        public string? NormalizedUserName { get; set; }
-        public string? Email { get; set; }
-        public string? NormalizedEmail { get; set; }
-        public string? PhoneNumber { get; set; }
-        public string? PasswordHash { get; set; }
+        public string UserName { get; set; } = string.Empty;
+        public string NormalizedUserName { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+        public string NormalizedEmail { get; set; } = string.Empty;
+        public string PhoneNumber { get; set; } = string.Empty;
+        public string PasswordHash { get; set; } = string.Empty;
+        public long RoleId { get; set; }
+        public Role Role { get; set; } = null!;
     }
 }

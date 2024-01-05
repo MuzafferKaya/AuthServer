@@ -1,7 +1,6 @@
 ﻿using DomainModel.Entities;
 using DomainModel.Repository;
 using DomainService.Abstrack;
-using System.Linq.Expressions;
 
 namespace DomainService.Services
 {
@@ -14,10 +13,10 @@ namespace DomainService.Services
             _repository = repository;
         }
 
-        public async Task<long> AddAsync(Customer entity)
+        public async Task<Customer> AddAsync(Customer entity)
         {
             await _repository.AddAsync(entity);
-            return entity.Id;
+            return entity;
         }
 
         public async Task<IList<Customer>> GetAllAsync()
@@ -30,20 +29,15 @@ namespace DomainService.Services
             return await _repository.GetByIdAsync(id);
         }
 
+        public async Task<Customer> UpdateAsync(Customer entity)
+        {
+            await _repository.UpdateAsync(entity);
+            return entity;
+        }
+
         public async Task RemoveAsync(Customer entity)
         {
             await _repository.RemoveAsync(entity);
-        }
-
-        public async Task<long> UpdateAsync(Customer entity)
-        {
-            await _repository.UpdateAsync(entity);
-            return entity.Id;
-        }
-
-        public async Task<IList<Customer>> WhereAsync(Expression<Func<Customer, bool>> predicate)
-        {
-            return await _repository.WhereAsync(predicate);
         }
     }
 }

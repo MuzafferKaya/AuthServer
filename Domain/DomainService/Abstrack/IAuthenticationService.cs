@@ -5,6 +5,6 @@ namespace DomainService.Abstrack
 {
     public interface IAuthenticationService
     {
-        Task<AuthenticationTokenResponse> CreateTokenAsync(AuthenticationLoginRequest entity);
+        Task<AuthenticationTokenResponse> CreateTokenAsync(AuthenticationRequest entity);
     }
 }

@@ -29,10 +29,9 @@ namespace DomainService.Services
             return await _repository.GetByIdAsync(id);
         }
 
-        public async Task<Customer> UpdateAsync(Customer entity)
+        public async Task UpdateAsync(Customer entity)
         {
             await _repository.UpdateAsync(entity);
-            return entity;
         }
 
         public async Task RemoveAsync(Customer entity)

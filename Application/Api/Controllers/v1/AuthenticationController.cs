@@ -1,5 +1,6 @@
 ﻿using DomainService.Abstrack;
 using Dto.Request.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers.v1
@@ -16,10 +17,11 @@ namespace Api.Controllers.v1
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> CreateToken([FromBody] AuthenticationRequest request)
-        {
+        {            
             var response = await _authenticationService.CreateTokenAsync(request);
-            return Created(string.Empty, response);
+            return Ok(response);
         }
     }
 }

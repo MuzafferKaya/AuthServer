@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DomainModel.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240105133654_Init")]
+    [Migration("20240106155455_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -140,8 +140,7 @@ namespace DomainModel.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("RoleId")
-                        .IsUnique();
+                    b.HasIndex("RoleId");
 
                     b.ToTable("Users");
                 });
@@ -149,8 +148,8 @@ namespace DomainModel.Migrations
             modelBuilder.Entity("DomainModel.Entities.User", b =>
                 {
                     b.HasOne("DomainModel.Entities.Role", "Role")
-                        .WithOne("User")
-                        .HasForeignKey("DomainModel.Entities.User", "RoleId")
+                        .WithMany("Users")
+                        .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -159,7 +158,7 @@ namespace DomainModel.Migrations
 
             modelBuilder.Entity("DomainModel.Entities.Role", b =>
                 {
-                    b.Navigation("User");
+                    b.Navigation("Users");
                 });
 #pragma warning restore 612, 618
         }

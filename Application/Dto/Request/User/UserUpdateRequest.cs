@@ -4,11 +4,10 @@ namespace Dto.Request.User
 {
     public class UserUpdateRequest
     {
-        public long id { get; set; }
-        public string? userName { get; set; }
-        public string? email { get; set; }
-        public string? phoneNumber { get; set; }
-        public string? password { get; set; }
+        public string userName { get; set; } = string.Empty;
+        public string email { get; set; } = string.Empty;
+        public string phoneNumber { get; set; } = string.Empty;
+        public string password { get; set; } = string.Empty;
         public long roleId { get; set; }
     }
 
@@ -16,8 +15,6 @@ namespace Dto.Request.User
     {
         public UserUpdateRequestValidator()
         {
-            RuleFor(x => x.id)
-                .NotNull().NotEmpty().WithMessage("Id gereklidir.");
             RuleFor(x => x.userName)
                 .NotNull().NotEmpty().WithMessage("Kullanıcı adı gereklidir.")
                 .MaximumLength(50).WithMessage("Kullanıcı adı 50 karakteri geçmemelidir.");

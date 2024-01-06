@@ -3,9 +3,9 @@
 namespace DomainModel.Entities
 {
     [Table("Roles")]
-    public class Role : EntityBase
+    public class Role : BaseEntity
     {
         public string RoleName { get; set; } = string.Empty;
-        public User? User { get; set; }
+        public List<User> Users { get; set; } = new List<User>();
     }
 }

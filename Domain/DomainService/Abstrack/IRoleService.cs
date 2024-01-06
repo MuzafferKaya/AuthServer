@@ -7,5 +7,6 @@ namespace DomainService.Abstrack
         Task<Role> AddAsync(Role entity);
         Task<IList<Role>> GetAllAsync();
         Task<Role> GetByIdAsync(long id);
+        Task UpdateAsync(Role entity);
     }
 }

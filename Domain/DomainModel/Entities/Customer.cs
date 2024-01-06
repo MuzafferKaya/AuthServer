@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace DomainModel.Entities
 {
     [Table("Customers")]
-    public class Customer : EntityBase
+    public class Customer : BaseEntity
     {
         [Required(ErrorMessage = "Ad gereklidir.")]
         [StringLength(50, ErrorMessage = "Ad 50 karakteri geçmemelidir.")]

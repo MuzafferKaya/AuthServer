@@ -32,9 +32,9 @@ namespace DomainService.Services
             return claims;
         }
 
-        public AuthenticationTokenResponse CreateToken(User entity)
+        public AuthenticationResponse CreateToken(User entity)
         {
-            return new AuthenticationTokenResponse()
+            return new AuthenticationResponse()
             {
                 accesToken = new JwtSecurityTokenHandler().WriteToken(
                     new JwtSecurityToken(
@@ -44,7 +44,7 @@ namespace DomainService.Services
                         expires: DateTime.UtcNow.AddHours(_jwtSettings.Expiration),
                         signingCredentials: new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Key!)), SecurityAlgorithms.HmacSha256Signature)
                         )),
-                refreshToken = null
+                refreshToken = null!
             };
         }
     }

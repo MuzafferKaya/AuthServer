@@ -25,6 +25,7 @@ namespace Dto.Mapping
             CreateMap<User, UserGetAllResponse>();
 
             CreateMap<RoleAddRequest, Role>();
+            CreateMap<RoleUpdateRequest, Role>();
             CreateMap<Role, RoleGetAllResponse>();
         }
     }

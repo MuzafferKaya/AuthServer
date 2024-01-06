@@ -23,8 +23,10 @@ namespace Dto.Extensions
             services.AddValidatorsFromAssemblyContaining<UserAddRequestValidator>();
             services.AddValidatorsFromAssemblyContaining<UserUpdateRequestValidator>();
 
+            services.AddValidatorsFromAssemblyContaining<RoleAddRequestValidator>();
+            services.AddValidatorsFromAssemblyContaining<RoleUpdateRequestValidator>();
+
             services.AddValidatorsFromAssemblyContaining<AuthenticationLoginRequestValidator>();
-            services.AddValidatorsFromAssemblyContaining<RoleAddRequestValidator>();            
 
             return services;
         }

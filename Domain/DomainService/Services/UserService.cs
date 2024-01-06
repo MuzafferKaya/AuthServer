@@ -17,9 +17,9 @@ namespace DomainService.Services
 
         public async Task<User> AddAsync(User entity)
         {
-            var user = GetByEmailAsync(entity.Email!).Result;
+            var user = await FindByEmailAsync(entity.Email);
             if (user != null)
-                throw new Exception("This email is already in use");
+                throw new Exception("E-posta zaten kullanımda");
 
             entity.NormalizedEmail = entity.Email!.ToLower();
             entity.NormalizedUserName = entity.UserName!.ToLower();
@@ -34,15 +34,21 @@ namespace DomainService.Services
             return await _repository.GetAllAsync();
         }
 
-        public async Task<User> GetByEmailAsync(string email)
+        public async Task<User> FindByEmailAsync(string email)
         {
             return await _repository.SingleOrDefaultAsync(x => x.NormalizedEmail == email.ToLower());
         }
 
-        public async Task<User> UpdateAsync(User entity)
+        public async Task UpdateAsync(User entity)
         {
+            var user = await FindByEmailAsync(entity.Email);
+            if (user != null)
+                throw new Exception("E-posta zaten kullanımda");
+
+            entity.NormalizedEmail = entity.Email!.ToLower();
+            entity.NormalizedUserName = entity.UserName!.ToLower();
+            entity.PasswordHash = _password.HashPassword(entity.PasswordHash!);
             await _repository.UpdateAsync(entity);
-            return entity;
         }
     }
 }

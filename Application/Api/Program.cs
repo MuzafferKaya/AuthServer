@@ -1,3 +1,4 @@
+using Api.Middlewares;
 using DomainModel.Extensions;
 using DomainService.Extensions;
 using Dto.Extensions;
@@ -26,6 +27,8 @@ builder.Services.LoadDomainModelExtension(builder.Configuration);
 builder.Services.LoadDomainServiceExtension(builder.Configuration);
 builder.Services.LoadDtoExtension();
 
+builder.Services.AddTransient<GlobalExceptionHandlingMiddleware>();
+
 builder.Services.AddCors(x => x.AddPolicy(
     "MyAllowSpecificOrigins", policy =>
     {
@@ -45,6 +48,8 @@ app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
 
 app.MapControllers();
 

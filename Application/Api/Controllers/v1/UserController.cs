@@ -4,7 +4,9 @@ using DomainModel.UnitOfWork;
 using DomainService.Abstrack;
 using Dto.Request.User;
 using Dto.Response.User;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Api.Controllers.v1
 {
@@ -24,23 +26,17 @@ namespace Api.Controllers.v1
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> AddAsync([FromBody] UserAddRequest request)
         {
-            try
-            {
-                var user = _mapper.Map<User>(request);
-                var newUser = await _userService.AddAsync(user);
-                await _unitOfWork.CommitTransactionAsync();
-                return Created(string.Empty, newUser);
-            }
-            catch (Exception ex)
-            {
-                await _unitOfWork.RollbackTransactionAsync();
-                return BadRequest(ex.Message);
-            }
+            var user = _mapper.Map<User>(request);
+            var newUser = await _userService.AddAsync(user);
+            await _unitOfWork.CommitTransactionAsync();
+            return Created(string.Empty, newUser);
         }
 
         [HttpGet]
+        [Authorize(Roles = "SuperAdmin")]
         public async Task<IActionResult> GetAllAsync()
         {
             var users = await _userService.GetAllAsync();
@@ -48,20 +44,14 @@ namespace Api.Controllers.v1
         }
 
         [HttpPut]
+        [Authorize]
         public async Task<IActionResult> UpdateAsync([FromBody] UserUpdateRequest request)
         {
-            try
-            {
-                var user = _mapper.Map<User>(request);
-                var updatedUser = await _userService.UpdateAsync(user);
-                await _unitOfWork.CommitTransactionAsync();
-                return NoContent();
-            }
-            catch (Exception ex)
-            {
-                await _unitOfWork.RollbackTransactionAsync();
-                return BadRequest(ex.Message);
-            }
+            var user = _mapper.Map<User>(request);
+            user.Id = Convert.ToInt64(HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)!.Value);
+            await _userService.UpdateAsync(user);
+            await _unitOfWork.CommitTransactionAsync();
+            return NoContent();
         }
     }
 }

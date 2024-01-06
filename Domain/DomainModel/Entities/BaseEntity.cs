@@ -2,7 +2,7 @@
 
 namespace DomainModel.Entities
 {
-    public class EntityBase
+    public class BaseEntity
     {
         [Key]
         public long Id { get; set; }

@@ -19,11 +19,11 @@ namespace DomainService.Services
             _tokenService = tokenService;
         }
 
-        public async Task<AuthenticationTokenResponse> CreateTokenAsync(AuthenticationRequest entity)
+        public async Task<AuthenticationResponse> CreateTokenAsync(AuthenticationRequest entity)
         {
-            var user = await _userService.GetByEmailAsync(entity.email!);
-            if (user == null || !_passwordService.VerifyHashedPassword(user.PasswordHash!, entity.password!))
-                throw new Exception("Incorrect email or password");
+            var user = await _userService.FindByEmailAsync(entity.email);
+            if (user == null || !_passwordService.VerifyHashedPassword(user.PasswordHash, entity.password))
+                throw new Exception("E-posta veya şifre yanlış");        
 
             var role = await _roleService.GetByIdAsync(user.RoleId);
             user.Role.RoleName = role.RoleName;

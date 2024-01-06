@@ -11,7 +11,7 @@ namespace Api.Controllers.v1
 {
     [Route("api/v1/[controller]s")]
     [ApiController]
-    [Authorize(Roles = "admin")]
+    [Authorize(Roles = "Admin, SuperAdmin")]
     public class CustomerController : ControllerBase
     {
         private readonly ICustomerService _customerService;
@@ -28,18 +28,10 @@ namespace Api.Controllers.v1
         [HttpPost]
         public async Task<IActionResult> AddAsync([FromBody] CustomerAddRequest request)
         {
-            try
-            {
-                var customer = _mapper.Map<Customer>(request);
-                var newCustomer = await _customerService.AddAsync(customer);
-                await _unitOfWork.CommitTransactionAsync();
-                return Created(string.Empty, newCustomer);                
-            }
-            catch (Exception ex)
-            {
-                await _unitOfWork.RollbackTransactionAsync();
-                return BadRequest(ex.Message);
-            }
+            var customer = _mapper.Map<Customer>(request);
+            var newCustomer = await _customerService.AddAsync(customer);
+            await _unitOfWork.CommitTransactionAsync();
+            return Created(string.Empty, newCustomer);
         }
 
         [HttpGet]
@@ -59,35 +51,19 @@ namespace Api.Controllers.v1
         [HttpPut]
         public async Task<IActionResult> UpdateAsync([FromBody] CustomerUpdateRequest request)
         {
-            try
-            {
-                var customer = _mapper.Map<Customer>(request);
-                var updatedCustomer = await _customerService.UpdateAsync(customer);
-                await _unitOfWork.CommitTransactionAsync();
-                return NoContent();
-            }
-            catch (Exception ex)
-            {
-                await _unitOfWork.RollbackTransactionAsync();
-                return BadRequest(ex.Message);
-            }
+            var customer = _mapper.Map<Customer>(request);
+            await _customerService.UpdateAsync(customer);
+            await _unitOfWork.CommitTransactionAsync();
+            return NoContent();
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAsync(long id)
         {
-            try
-            {
-                var customer = await _customerService.GetByIdAsync(id);
-                await _customerService.RemoveAsync(customer);
-                await _unitOfWork.CommitTransactionAsync();
-                return NoContent();
-            }
-            catch (Exception ex)
-            {
-                await _unitOfWork.RollbackTransactionAsync();
-                return BadRequest(ex.Message);
-            }
+            var customer = await _customerService.GetByIdAsync(id);
+            await _customerService.RemoveAsync(customer);
+            await _unitOfWork.CommitTransactionAsync();
+            return NoContent();
         }
     }
 }

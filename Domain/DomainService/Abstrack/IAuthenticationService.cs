@@ -1,10 +1,11 @@
 ﻿using Dto.Request.Authentication;
+using Dto.Response;
 using Dto.Response.Authentication;
 
 namespace DomainService.Abstrack
 {
     public interface IAuthenticationService
     {
-        Task<AuthenticationTokenResponse> CreateTokenAsync(AuthenticationRequest entity);
+        Task<AuthenticationResponse> CreateTokenAsync(AuthenticationRequest entity);
     }
 }

@@ -3,7 +3,7 @@
 namespace DomainModel.Entities
 {
     [Table("Users")]
-    public class User : EntityBase
+    public class User : BaseEntity
     {
         public string UserName { get; set; } = string.Empty;
         public string NormalizedUserName { get; set; } = string.Empty;

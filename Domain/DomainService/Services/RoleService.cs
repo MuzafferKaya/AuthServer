@@ -28,5 +28,10 @@ namespace DomainService.Services
         {
             return await _repository.GetByIdAsync(id);
         }
+
+        public async Task UpdateAsync(Role entity)
+        {
+            await _repository.UpdateAsync(entity);
+        }
     }
 }

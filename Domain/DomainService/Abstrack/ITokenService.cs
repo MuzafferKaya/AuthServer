@@ -5,6 +5,6 @@ namespace DomainService.Abstrack
 {
     public interface ITokenService
     {
-        AuthenticationTokenResponse CreateToken(User entity);
+        AuthenticationResponse CreateToken(User entity);
     }
 }
